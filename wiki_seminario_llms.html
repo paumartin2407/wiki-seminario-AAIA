@@ -146,6 +146,21 @@
       vertical-align: top;
     }
 
+    .mono-grid {
+      display: grid;
+      grid-template-columns: repeat(4, minmax(0,1fr));
+      gap: 10px;
+      margin: 14px 0 18px;
+    }
+    .mono-item {
+      background: var(--paper);
+      border: 1px solid var(--line);
+      border-radius: 10px;
+      padding: 10px 12px;
+      text-align: center;
+      font-weight: 600;
+    }
+
     tr:last-child td { border-bottom: none; }
 
     .media-slot {
@@ -173,7 +188,25 @@
       p, li, th, td { font-size: 0.98rem; }
       .scheme-grid { grid-template-columns: 1fr; }
     }
+
+    @media (max-width: 640px) {
+      .mono-grid { grid-template-columns: 1fr 1fr; }
+    }
   </style>
+
+  <script>
+    window.MathJax = {
+      tex: {
+        inlineMath: [['\\(','\\)'], ['$', '$']],
+        displayMath: [['\\[','\\]'], ['$$','$$']]
+      },
+      options: {
+        skipHtmlTags: ['script', 'noscript', 'style', 'textarea', 'pre']
+      }
+    };
+  </script>
+  <script defer src="https://cdn.jsdelivr.net/npm/mathjax@3/es5/tex-mml-chtml.js"></script>
+
 </head>
 <body>
   <main class="page">
@@ -304,28 +337,20 @@
     <section>
       <h2>Cuantización de modelos</h2>
       <p>
-        La cuantización es una de las estrategias más utilizadas para reducir el consumo de memoria y acelerar
-        la inferencia en LLMs. Su idea básica consiste en representar pesos y, en algunos casos, activaciones,
-        con menos bits que en la representación habitual en coma flotante. En lugar de trabajar exclusivamente
-        con precisión FP16 o FP32, el modelo puede almacenarse y ejecutarse con formatos de menor precisión,
-        como INT8 o incluso INT4 en determinados escenarios.
+        La cuantización es una técnica utilizada para reducir el coste computacional y de memoria durante la inferencia de modelos de inteligencia artificial. Para ello, los pesos y las activaciones se representan con tipos de datos de menor precisión, como <strong>INT8</strong>, en lugar del formato habitual de <strong>FP32</strong>.
       </p>
       <p>
-        La principal ventaja de esta técnica es que disminuye el tamaño del modelo y reduce el ancho de banda
-        de memoria necesario para cargar sus parámetros. En LLMs, donde una parte sustancial del tiempo de
-        inferencia depende del movimiento de datos, esta reducción tiene efectos muy relevantes. Un modelo más
-        compacto exige menos memoria y permite desplegar más instancias o utilizar hardware menos costoso.
+        La principal ventaja de esta técnica es que disminuye el tamaño del modelo y reduce el ancho de banda de memoria necesario para cargar sus parámetros. En LLMs, donde una parte sustancial del tiempo de inferencia depende del movimiento de datos, esta reducción tiene efectos muy relevantes. Un modelo más compacto exige menos memoria y permite desplegar más instancias o utilizar hardware menos costoso.
       </p>
       <p>
-        El principal inconveniente es que la reducción de precisión introduce una aproximación numérica. No todas
-        las capas del modelo toleran igual de bien la cuantización, y una estrategia demasiado agresiva puede
-        degradar la calidad de salida. Por eso, la literatura reciente insiste en métodos de cuantización más
-        selectivos, calibración y ajuste fino posterior.
+        El principal inconveniente es que la reducción de precisión introduce una aproximación numérica. No todas las capas del modelo toleran igual de bien la cuantización, y una estrategia demasiado agresiva puede degradar la calidad de salida. Por eso, la literatura reciente insiste en métodos de cuantización más selectivos, calibración y ajuste fino posterior.
       </p>
+
       <div class="callout">
         La cuantización mejora especialmente memoria y coste operativo, pero obliga a comprobar cuidadosamente si
         la pérdida de precisión sigue siendo compatible con la tarea que se quiere servir.
       </div>
+
       <table>
         <thead>
           <tr>
@@ -357,9 +382,161 @@
           </tr>
         </tbody>
       </table>
-      <div class="media-slot">Espacio para insertar una tabla comparativa o figura sobre FP16, INT8 e INT4.</div>
-    </section>
 
+      <h3>Tres elementos clave que se pueden cuantificar</h3>
+      <p>La idea más sencilla es cuantificar los pesos del modelo para reducir su consumo de memoria. Sin embargo, hay otros componentes que también se pueden cuantificar. El segundo aspecto importante son las activaciones del modelo, que son las salidas intermedias generadas por las capas del modelo tras cada operación durante la inferencia. Aunque estas activaciones son dinámicas y no se incluyen explícitamente en el modelo, desempeñan un papel crucial en la cuantificación.</p>
+      <p>Si el modelo Llama2 7B se almacena en FP16/BF16, cada parámetro ocupa 2 bytes, lo que da como resultado un uso total de memoria de aproximadamente ~14 GB (7B parámetros * 2 bytes/parámetro). Al cuantificar el modelo a FP8, la memoria necesaria para los pesos del modelo se reduce a ~7 GB, lo que reduce a la mitad el consumo de memoria. Además, la cuantificación de las activaciones intermedias del modelo (cálculo) puede mejorar aún más la velocidad de inferencia mediante el uso de hardware especializado para el procesamiento de tensores que escala el rendimiento con un ancho de bits reducido.</p>
+      <p>Para los modelos transformers decoder-only, otro componente a tener en cuenta es la caché KV durante la inferencia. Esto es específico de los modelos de decoder, ya que generan tokens de salida de forma autorregresiva utilizando la caché KV para acelerar este proceso. El tamaño de la caché KV depende de la longitud de la secuencia y del número de capas y cabezas. En el caso de Llama2 7B con una ventana de contexto larga (por ejemplo, 4096 tokens), la caché KV también puede aportar varios gigabytes a la huella de memoria total.</p>
+      <h3>Formatos de menor precisión más utilizados</h3>
+      <div class="mono-grid">
+        <div class="mono-item">FP16</div>
+        <div class="mono-item">INT32</div>
+        <div class="mono-item">INT16</div>
+        <div class="mono-item">INT8</div>
+        <div class="mono-item">INT4</div>
+        <div class="mono-item">INT1</div>
+      </div>
+      <p>
+        En el estado actual de la investigación, los formatos que ofrecen el mejor equilibrio entre rendimiento y mantenimiento de la precisión suelen ser <strong>INT8</strong> y <strong>FP16</strong>.
+      </p>
+      <p>
+        Cuando se realizan operaciones en un determinado tipo de dato, por ejemplo <strong>INT8</strong>, es necesario utilizar un tipo de dato adicional capaz de almacenar el resultado sin producir desbordamientos. Este tipo se conoce como <em>accumulation data type</em> o <em>tipo de acumulación</em>. Por ejemplo, en operaciones con FP32 la acumulación también se realiza en FP32, mientras que en INT8 normalmente se emplea INT32.
+      </p>
+
+
+      <h3>Cuantización a float16</h3>
+      <p>
+        La conversión de FP32 a FP16 es relativamente directa, ya que ambos formatos siguen un esquema de representación similar basado en coma flotante.
+      </p>
+
+      <h3>Cuantización a int8</h3>
+      <p>
+        La cuantización de FP32 a INT8 es más compleja. Mientras que un valor en INT8 solo puede representar 256 valores distintos, FP32 permite representar un rango mucho más amplio y continuo. Por ello, el objetivo consiste en encontrar la mejor manera de proyectar un intervalo de valores reales \( [a,b] \) al espacio discreto representable en INT8.
+      </p>
+      <p>
+        Para ello, existen distintos enfoques de mapeo de rango.
+      </p>
+
+      <h3>Cuantización afín</h3>
+      <p>
+        La cuantización afín, también conocida como asimétrica, se define mediante dos parámetros principales: el factor de escala \( s \) y el <em>zero-point</em> \( z \).
+      </p>
+      <ul>
+        <li>El factor de escala, que es un número real positivo, determina el tamaño del paso entre valores cuantizados.</li>
+        <li>El <em>zero-point</em>, del mismo tipo que los valores cuantizados, garantiza que el valor real cero pueda representarse exactamente tras la cuantización.</li>
+      </ul>
+      <p>
+        Este último aspecto es especialmente importante porque muchas operaciones de redes neuronales dependen de rellenados con ceros en los bordes de tensores, por ejemplo en convoluciones.
+      </p>
+      <p>
+        Una vez definidos estos parámetros, la cuantización se expresa como:
+      </p>
+      <div class="callout">
+        \[
+        x_q = \operatorname{clip}(\operatorname{round}(\tfrac{x}{s} + z), \alpha_q, \beta_q)
+        \]
+      </div>
+      <p>donde:</p>
+      <ul>
+        <li>\( x \) es el valor original en alta precisión.</li>
+        <li>\( x_q \) es el valor cuantizado.</li>
+        <li>\( s \) es el factor de escala.</li>
+        <li>\( z \) es el <em>zero-point</em>.</li>
+        <li>\( \alpha_q \) y \( \beta_q \) definen el rango permitido en la representación cuantizada.</li>
+        <li><code>round</code> redondea al valor cuantizado más cercano.</li>
+        <li><code>clip</code> fuerza el resultado a permanecer dentro del rango representable.</li>
+      </ul>
+      <p>
+        Para reconstruir una aproximación del valor original a partir del valor cuantizado, se utiliza:
+      </p>
+      <div class="callout">
+        \[
+        x \approx x' = s \cdot (x_q - z)
+        \]
+      </div>
+      <p>
+        donde \( x' \) es una aproximación redondeada del valor original \( x \).
+      </p>
+      <p>
+        Durante los procesos de cuantización y deconversión aparecen inevitablemente errores de redondeo y errores por saturación o <em>clipping</em>, que forman parte inherente de este procedimiento.
+      </p>
+
+      <h3>Cuantización simétrica</h3>
+      <p>
+        La cuantización simétrica es una simplificación del caso asimétrico en la que el <em>zero-point</em> se fija en \( z = 0 \). Esto reduce la carga computacional al eliminar parte de las sumas adicionales requeridas en la formulación afín.
+      </p>
+      <p>En este caso, las ecuaciones quedan:</p>
+      <div class="callout">
+        \[
+        x_q = \operatorname{clip}(\operatorname{round}(\tfrac{x}{s}), \alpha_q, \beta_q)
+        \]
+        \[
+        x \approx x' = s \cdot x_q
+        \]
+      </div>
+
+      <div class="media-slot">
+        <img src="	https://developer-blogs.nvidia.com/wp-content/uploads/2025/11/Affine-quantization-vs-symmetric.png" alt="Cuantización por diferentes granularidades: por tensor, por canal y por bloque" style="width: 100%; height: auto; border-radius: 12px;">
+      </div>
+
+      <h3>Granularidad de la cuantización</h3>
+      <p>
+        Otro aspecto importante es la granularidad de la cuantización, es decir, cómo se comparten los parámetros de cuantización dentro de un tensor. Las estrategias más utilizadas son las siguientes:
+      </p>
+      <ul>
+        <li><strong>Cuantización por tensor (per-tensor o per-layer):</strong> todos los valores del tensor comparten los mismos parámetros de cuantización. Es la opción más simple y eficiente en memoria, aunque puede introducir mayores errores cuando la distribución de los datos varía mucho dentro del tensor.</li>
+        <li><strong>Cuantización por canal (per-channel):</strong> cada canal utiliza sus propios parámetros de cuantización, algo habitual en convoluciones. Esta estrategia reduce el error, ya que evita que valores atípicos de un canal afecten a todo el tensor.</li>
+        <li><strong>Cuantización por bloque o por grupo (per-block o per-group):</strong> el tensor se divide en bloques más pequeños, y cada uno dispone de sus propios parámetros. Esto ofrece un control más fino y resulta útil cuando distintas regiones del tensor presentan distribuciones muy diferentes.</li>
+      </ul>
+
+      <div class="media-slot">
+        <img src="https://developer-blogs.nvidia.com/wp-content/uploads/2025/11/Quantization-granularity.png" alt="Cuantización por diferentes granularidades: por tensor, por canal y por bloque" style="width: 100%; height: auto; border-radius: 12px;">
+      </div>
+
+      <h3>Calibración</h3>
+      <p>
+        Una vez entendido el proceso de cuantización, surge una cuestión fundamental: ¿cómo se determina el rango \( [a,b] \) de valores FP32 que debe mapearse al nuevo espacio cuantizado? Aquí entra en juego la calibración.
+      </p>
+      <p>
+        La calibración es la etapa en la que se estiman los rangos de valores en precisión completa que se utilizarán para cuantizar. En el caso de los pesos, esta tarea es relativamente sencilla, ya que sus valores se conocen en el momento de cuantizar el modelo. Sin embargo, para las activaciones resulta más complejo, y existen varios enfoques:
+      </p>
+      <ul>
+        <li><strong>Global calibration:</strong> es el método más simple. Consiste en tomar directamente el valor mínimo y máximo de los datos sin cuantizar y utilizarlos como rango de referencia. Aunque simplifica el proceso, puede perjudicar la precisión, ya que no todos los valores extremos son necesariamente relevantes para el comportamiento del modelo.</li>
+        <li><strong>Max calibration:</strong> en este enfoque se utiliza el valor máximo observado en los datos reales, en lugar de considerar el rango completo teórico del tipo de dato original. Esto permite ajustar mejor el proceso de cuantización al comportamiento real del modelo y reducir parte de la pérdida de información.</li>
+        <li><strong>KL divergence calibration:</strong> la divergencia de Kullback-Leibler (KL) mide la diferencia entre dos distribuciones de probabilidad. En cuantización, se emplea para comparar la distribución de los datos cuantizados con la distribución de los datos originales en alta precisión. Se evalúan distintos factores de escala y se selecciona aquel que minimiza la divergencia, es decir, la pérdida de información. En general, este método ofrece mejores resultados que una simple calibración basada en el valor máximo.</li>
+        <li><strong>Percentile calibration:</strong> la calibración por percentiles se basa en la distribución real de los datos, en lugar de considerar todos los valores extremos. Por ejemplo, en distribuciones normales, los valores mínimos y máximos suelen encontrarse en colas muy poco representativas. Este método descarta una pequeña fracción de valores extremos y centra el rango de cuantización en el intervalo donde se concentra la mayor parte de los datos. Los percentiles más utilizados suelen ser 99.99 % o 99.999 %, ya que percentiles menores pueden resultar demasiado agresivos y eliminar valores importantes.</li>
+      </ul>
+
+      <h3>Tipos de cuantización</h3>
+      <p>
+        Existen varios métodos para aplicar cuantización a un modelo, con el objetivo de acelerar el cálculo, reducir el tamaño del modelo y minimizar la pérdida de precisión.
+      </p>
+      <ul>
+        <li><strong>Post-Training Quantization:</strong> consiste en aplicar la cuantización una vez que el modelo ya ha sido entrenado.
+          <ul>
+            <li><strong>Dynamic Quantization:</strong> se realiza en tiempo de ejecución. Aunque es sencilla de aplicar, introduce cierta sobrecarga computacional adicional.</li>
+            <li><strong>Static Quantization:</strong> los parámetros de cuantización se calculan previamente, antes de la inferencia. Esto reduce la sobrecarga en tiempo de ejecución y suele ofrecer un mejor rendimiento.</li>
+          </ul>
+        </li>
+        <li><strong>Quantization-Aware Training:</strong> el modelo incorpora durante el entrenamiento operadores que simulan los efectos de la cuantización. De este modo, aprende a adaptarse a los errores introducidos por la baja precisión durante el proceso de <em>backpropagation</em>. Como resultado, esta técnica suele conservar mejor la precisión final del modelo que la cuantización post-entrenamiento.</li>
+        <li><strong>Weight Quantization:</strong> consiste en cuantizar únicamente las matrices de pesos del modelo, manteniendo las activaciones en su precisión original. Esta estrategia permite reducir significativamente los requisitos de almacenamiento, aunque el ahorro computacional puede ser menor que en otros enfoques más agresivos.</li>
+        <li><strong>Activation-Aware Weight Quantization (AWQ):</strong> parte de la idea de que no todos los pesos tienen la misma importancia. En lugar de cuantizar todos por igual, identifica aquellos pesos más relevantes a partir de la magnitud de las activaciones asociadas. Los pesos más críticos se conservan en alta precisión, mientras que los menos importantes sí se cuantizan. Esto permite reducir el coste computacional sin degradar tanto la precisión.</li>
+        <li><strong>Attention-Aware Weight Quantization:</strong> utiliza información derivada del mecanismo de atención para estimar la importancia de los pesos, especialmente en modelos de lenguaje de gran tamaño (LLMs). Los pesos considerados más importantes se representan con mayor número de bits, mientras que los menos relevantes se cuantizan con menor precisión. Este enfoque da lugar a una cuantización de precisión mixta, capaz de mejorar la eficiencia manteniendo un buen nivel de exactitud.</li>
+      </ul>
+
+      <h3>Reducción de memoria</h3>
+      <p>Uno de los beneficios más inmediatos y consistentes de la cuantización es la reducción del tamaño del modelo y de su huella de memoria. Al representar pesos y, en muchos casos, activaciones con un menor número de bits, disminuyen tanto los requisitos de almacenamiento como el ancho de banda de memoria necesario durante la inferencia. Desde un punto de vista teórico, pasar de FP32 a FP16 reduce el almacenamiento aproximadamente a la mitad, mientras que INT8 lo reduce a cerca de una cuarta parte.</p>
+      <p>Los resultados empíricos respaldan esta ventaja de forma bastante robusta. SmoothQuant muestra que la cuantización W8A8 puede lograr reducciones de memoria de hasta 2× manteniendo la precisión del modelo, mientras que GPTQ demuestra que es posible cuantizar modelos generativos hasta 3 o 4 bits por peso con una degradación mínima en muchos escenarios.</p>
+      <p>De forma complementaria, evaluaciones comparativas recientes en LLMs confirman que la disminución del consumo de memoria es el efecto más estable de la cuantización, incluso cuando otros beneficios, como la aceleración, no siempre se materializan con la misma intensidad.</p>
+
+      <h3>Impacto en la velocidad de inferencia</h3>
+      <p>Aunque la cuantización suele asociarse a una inferencia más rápida, la literatura muestra que la aceleración real es menos predecible que la reducción de memoria. En teoría, trabajar con menor precisión reduce el coste aritmético y el volumen de datos transferidos, lo que debería traducirse en menores latencias y mayor throughput. Sin embargo, en la práctica, estas mejoras dependen en gran medida de la existencia de kernels optimizados, del runtime empleado, del soporte del hardware para operaciones de baja precisión y del tipo exacto de cuantización utilizada.</p>
+      <p>Estudios comparativos muestran que algunos modelos cuantizados reducen claramente la memoria, pero no mejoran la velocidad en la misma proporción e incluso pueden ralentizarse en ciertos entornos. Por ello, no conviene presentar la cuantización como una técnica que garantiza aceleración, sino como una optimización cuyo efecto sobre la latencia depende de la coadaptación entre modelo, backend y hardware.</p>
+    
+      <h3>Efecto sobre la calidad y robustez del modelo</h3>
+      <p>El principal coste de la cuantización es la introducción de error numérico. Al mapear valores continuos de alta precisión a un conjunto discreto mucho más pequeño, aparecen errores de redondeo y saturación que pueden acumularse a lo largo de las capas del modelo. A pesar de ello, la literatura coincide en que una cuantización moderada, especialmente FP16 e INT8, suele preservar razonablemente bien la calidad del modelo. Esta es una de las razones por las que INT8 sigue siendo el formato más extendido en despliegues reales: ofrece un equilibrio sólido entre compresión, eficiencia y fiabilidad predictiva.</p>
+
+    </section>
     <section>
       <h2>KV cache y optimización de memoria en inferencia autoregresiva</h2>
       <p>
@@ -551,6 +728,10 @@
         <li>Dettmers, T., et al. (2023). <em>QLoRA: Efficient Finetuning of Quantized LLMs</em>.</li>
         <li>Zhen, R., et al. (2025). <em>A Survey of Efficient LLM Inference Serving</em>.</li>
         <li>Micikevicius, P., et al. (2018). <em>Mixed Precision Training</em>.</li>
+        <li>Jacob, B., et al. (2018). <em>Quantization and Training of Neural Networks for Efficient Integer-Arithmetic-Only Inference</em>, CVPR 2018.</li>
+        <li>Frantar et al., <em>GPTQ: Accurate Post-Training Quantization for Generative Pre-Trained Transformers</em></li>
+        <li>Jin, X., et al. (2024). <em>A Comprehensive Evaluation of Quantization Strategies for Large Language Models</em>.</li>
+        <li>Smith, J., et al. (2024). <em>Does quantization affect models' performance on long-context tasks?</em></li>
       </ol>
     </section>
   </main>
