@@ -567,54 +567,123 @@
       <div class="media-slot">Espacio para insertar un esquema visual del funcionamiento de la KV cache en generación autoregresiva.</div>
     </section>
 
-    <section>
-      <h2>Batching, scheduling y serving eficiente</h2>
-      <p>
-        Una parte esencial de la eficiencia en LLMs no depende solo del modelo, sino de cómo se gestionan las
-        solicitudes en producción. En aplicaciones reales, el sistema debe atender múltiples peticiones con
-        longitudes de entrada y salida distintas, llegadas asíncronas y diferentes prioridades de servicio.
-        Aquí aparecen el batching, el scheduling y, en general, el diseño de serving eficiente.
-      </p>
-      <p>
-        El batching agrupa varias peticiones para procesarlas conjuntamente y aprovechar mejor el hardware. Esto
-        suele incrementar el throughput, pero puede introducir esperas adicionales y empeorar la latencia individual.
-        El scheduling se ocupa de decidir cómo organizar esas peticiones, qué recursos asignar y en qué orden
-        ejecutarlas para mantener un equilibrio razonable entre rapidez y eficiencia global.
-      </p>
-      <p>
-        El serving eficiente integra estas decisiones en una arquitectura más amplia. No se trata únicamente de
-        ejecutar el modelo, sino de hacerlo de forma estable, escalable y económicamente sostenible. Por eso, en
-        este nivel sistémico se analizan colas, lotes dinámicos, reutilización de memoria y coordinación entre
-        distintas peticiones concurrentes.
-      </p>
-      <table>
-        <thead>
-          <tr>
-            <th>Técnica</th>
-            <th>Beneficio dominante</th>
-            <th>Coste o limitación</th>
-          </tr>
-        </thead>
-        <tbody>
-          <tr>
-            <td>Batching</td>
-            <td>Mejora throughput y uso del hardware</td>
-            <td>Puede penalizar la latencia individual</td>
-          </tr>
-          <tr>
-            <td>Scheduling</td>
-            <td>Organiza mejor recursos y prioridades</td>
-            <td>Añade complejidad de gestión</td>
-          </tr>
-          <tr>
-            <td>Serving optimizado</td>
-            <td>Mejora el rendimiento global del sistema</td>
-            <td>Depende del patrón de carga y la infraestructura</td>
-          </tr>
-        </tbody>
-      </table>
-      <div class="media-slot">Espacio para insertar aquí un gráfico o vídeo explicativo sobre batching dinámico o serving de LLMs.</div>
-    </section>
+<section>
+  <h2>Batching, scheduling y serving eficiente</h2>
+  <p>
+    Una parte esencial de la eficiencia en LLMs no depende solo del modelo, sino de cómo se gestionan las
+    solicitudes en producción. En aplicaciones reales, el sistema debe atender múltiples peticiones con
+    longitudes de entrada y salida distintas, llegadas asíncronas y diferentes prioridades de servicio.
+    Aquí aparecen el batching, el scheduling y, en general, el diseño de serving eficiente.
+  </p>
+  <p>
+    El batching agrupa varias peticiones para procesarlas conjuntamente y aprovechar mejor el hardware. Esto
+    suele incrementar el throughput, pero puede introducir esperas adicionales y empeorar la latencia individual.
+    El scheduling se ocupa de decidir cómo organizar esas peticiones, qué recursos asignar y en qué orden
+    ejecutarlas para mantener un equilibrio razonable entre rapidez y eficiencia global.
+  </p>
+  <p>
+    El serving eficiente integra estas decisiones en una arquitectura más amplia. No se trata únicamente de
+    ejecutar el modelo, sino de hacerlo de forma estable, escalable y económicamente sostenible. Por eso, en
+    este nivel sistémico se analizan colas, lotes dinámicos, reutilización de memoria y coordinación entre
+    distintas peticiones concurrentes.
+  </p>
+
+  <h3>Static batching vs. continuous batching</h3>
+  <p>
+    La generación autoregresiva introduce una dificultad específica para el batching: cada petición avanza
+    a su propio ritmo y puede terminar en un paso distinto. El enfoque más sencillo, el <strong>static
+    batching</strong>, espera a acumular un grupo fijo de peticiones y las ejecuta en bloque hasta que todas
+    terminan. El problema es que, en cuanto las primeras secuencias finalizan, el hardware queda parcialmente
+    en reposo esperando a las más largas, lo que reduce el aprovechamiento real del sistema.
+  </p>
+  <p>
+    El <strong>continuous batching</strong> —también llamado <em>iteration-level scheduling</em>— resuelve
+    esto revisando el estado del lote en cada iteración. Cuando una secuencia termina su generación, la ranura
+    que ocupaba se libera de inmediato y puede ser ocupada por una nueva petición de la cola, sin esperar a que
+    el resto del lote concluya. Esto mantiene el hardware en alta ocupación de forma continua y reduce
+    significativamente la latencia percibida por los usuarios con respuestas cortas.
+  </p>
+
+  <div class="callout">
+    El continuous batching es una de las mejoras más impactantes en serving de LLMs. Sin modificar el modelo
+    ni su calidad de salida, puede multiplicar el throughput efectivo del sistema varias veces respecto al
+    batching estático, simplemente reorganizando cómo se asignan las ranuras del lote.
+  </div>
+
+  <h3>Scheduling: decidir qué ejecutar y cuándo</h3>
+  <p>
+    El scheduler es el componente que decide en cada momento qué peticiones entran en el lote activo, cuáles
+    esperan en cola y cómo se distribuyen los recursos. Más allá del simple orden de llegada (FCFS), los
+    sistemas modernos incorporan estrategias más sofisticadas. El <strong>priority scheduling</strong> permite
+    garantizar latencias a ciertos usuarios a costa de penalizar otros. La <strong>preemption</strong> suspende
+    temporalmente peticiones activas cuando la memoria de la KV cache se agota, reanudándolas más tarde una vez
+    liberados recursos. El <strong>length-aware scheduling</strong> estima la longitud de las respuestas para
+    formar lotes más homogéneos y evitar que peticiones muy largas monopolicen el sistema.
+  </p>
+
+  <h3>Gestión de memoria: PagedAttention</h3>
+  <p>
+    Un cuello de botella frecuente en serving concurrente es la gestión de la memoria de la KV cache. En un
+    sistema naive se reserva un bloque contiguo de memoria para cada petición, dimensionado para el peor caso
+    posible, lo que provoca una fragmentación severa y reduce el número de peticiones que pueden estar activas
+    simultáneamente. <strong>PagedAttention</strong>, introducido por el motor de serving <em>vLLM</em>, aplica
+    al problema de la KV cache una idea análoga a la memoria virtual de los sistemas operativos: divide la
+    memoria en páginas de tamaño fijo que se asignan de forma dinámica conforme avanza la generación. Cuando
+    una petición termina, sus páginas se liberan y pueden reasignarse a otras, eliminando gran parte del
+    desperdicio y permitiendo mayor concurrencia con el mismo hardware.
+  </p>
+
+  <h3>Motores de inferencia y frameworks de serving</h3>
+  <p>
+    En la práctica, estas decisiones se implementan dentro de motores de inferencia especializados que combinan
+    continuous batching, gestión eficiente de la KV cache y kernels optimizados. <strong>vLLM</strong> es el
+    sistema de referencia más adoptado, ya que introdujo PagedAttention y continuous batching en un framework de
+    código abierto con amplia compatibilidad de modelos. <strong>TensorRT-LLM</strong> (NVIDIA) prioriza el
+    rendimiento máximo sobre hardware NVIDIA mediante kernel fusion y soporte para cuantización.
+    <strong>TGI</strong> (Text Generation Inference, HuggingFace) ofrece un punto de entrada más accesible para
+    despliegues empresariales, mientras que <strong>SGLang</strong> introduce una capa de programación
+    estructurada para gestionar flujos complejos de generación con mayor control sobre el scheduling.
+  </p>
+
+  <table>
+    <thead>
+      <tr>
+        <th>Técnica</th>
+        <th>Beneficio dominante</th>
+        <th>Coste o limitación</th>
+      </tr>
+    </thead>
+    <tbody>
+      <tr>
+        <td>Static batching</td>
+        <td>Implementación simple</td>
+        <td>Hardware infrautilizado; latencia alta para peticiones cortas</td>
+      </tr>
+      <tr>
+        <td>Continuous batching</td>
+        <td>Alto throughput; latencia más uniforme</td>
+        <td>Mayor complejidad de implementación</td>
+      </tr>
+      <tr>
+        <td>Scheduling avanzado</td>
+        <td>Control fino sobre latencia y prioridades</td>
+        <td>Requiere estimaciones y decisiones en tiempo real</td>
+      </tr>
+      <tr>
+        <td>PagedAttention</td>
+        <td>Mayor concurrencia con el mismo hardware</td>
+        <td>Overhead de gestión de páginas</td>
+      </tr>
+      <tr>
+        <td>Motores especializados (vLLM, TRT-LLM, TGI)</td>
+        <td>Integran todas las optimizaciones conjuntamente</td>
+        <td>Dependencia de infraestructura específica</td>
+      </tr>
+    </tbody>
+  </table>
+
+  <div class="media-slot">Espacio para insertar aquí un gráfico comparativo de throughput entre static batching, continuous batching y PagedAttention en un escenario de serving real.</div>
+</section>
 
     <section>
       <h2>Análisis comparativo de trade-offs</h2>
@@ -732,6 +801,9 @@
         <li>Frantar et al., <em>GPTQ: Accurate Post-Training Quantization for Generative Pre-Trained Transformers</em></li>
         <li>Jin, X., et al. (2024). <em>A Comprehensive Evaluation of Quantization Strategies for Large Language Models</em>.</li>
         <li>Smith, J., et al. (2024). <em>Does quantization affect models' performance on long-context tasks?</em></li>
+        <li>Kwon, W., et al. (2023). <em>Efficient Memory Management for Large Language Model Serving with PagedAttention</em>. SOSP 2023.</li>
+        <li>Yu, G., et al. (2022). <em>Orca: A Distributed Serving System for Transformer-Based Generative Models</em>. OSDI 2022.</li>
+        <li>Zheng, L., et al. (2024). <em>SGLang: Efficient Execution of Structured Language Model Programs</em>.</li>
       </ol>
     </section>
   </main>
