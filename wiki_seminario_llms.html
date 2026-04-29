@@ -8,35 +8,31 @@
     :root {
       --bg: #f6f6f3;
       --paper: #ffffff;
-      --ink: #1e1e1b;
-      --muted: #5f5f59;
+      --ink: #1a1a17;
+      --muted: #5a5a54;
       --line: #ddddd5;
-      --accent: #244a8f;
-      --soft: #eff4ff;
+      --accent: #1b3f8b;
+      --accent-2: #0e6655;
+      --accent-3: #9a3a00;
+      --soft: #eef3ff;
       --soft-2: #fafaf8;
+      --red: #b91c1c;
+      --mono: 'IBM Plex Mono', monospace;
     }
 
-    * { box-sizing: border-box; }
+    * { box-sizing: border-box; margin: 0; padding: 0; }
 
     body {
-      margin: 0;
-      font-family: "Inter", "Segoe UI", Arial, sans-serif;
+      font-family: 'IBM Plex Sans', 'Segoe UI', Arial, sans-serif;
       background: var(--bg);
       color: var(--ink);
-      line-height: 1.75;
+      line-height: 1.8;
+      font-size: 1rem;
     }
 
-    .page {
-      max-width: 930px;
-      margin: 0 auto;
-      padding: 56px 24px 72px;
-    }
+    .page { max-width: 960px; margin: 0 auto; padding: 64px 28px 80px; }
 
-    header {
-      margin-bottom: 38px;
-      border-bottom: 1px solid var(--line);
-      padding-bottom: 28px;
-    }
+    header { margin-bottom: 38px; border-bottom: 1px solid var(--line); padding-bottom: 28px; }
 
     h1 {
       font-size: clamp(2rem, 4vw, 3rem);
@@ -52,37 +48,58 @@
       margin: 0;
     }
 
-    section {
-      margin: 38px 0 50px;
-    }
+    section { margin-bottom: 64px; scroll-margin-top: 24px; }
 
     h2 {
-      font-size: 1.58rem;
-      margin: 0 0 18px;
-      padding-bottom: 10px;
-      border-bottom: 1px solid var(--line);
-      letter-spacing: -0.02em;
+      font-size: 1.55rem;
+      font-weight: 700;
+      letter-spacing: -0.025em;
+      margin-bottom: 6px;
+      padding-bottom: 12px;
+      border-bottom: 2px solid var(--ink);
+      display: flex;
+      align-items: baseline;
+      gap: 12px;
+    }
+
+    h2 .sec-num {
+      font-family: var(--mono);
+      font-size: 0.9rem;
+      color: var(--muted);
+      font-weight: 400;
     }
 
     h3 {
       font-size: 1.08rem;
-      margin: 24px 0 10px;
+      font-weight: 700;
+      margin: 32px 0 12px;
+      letter-spacing: -0.01em;
     }
 
-    p {
-      margin: 0 0 16px;
-      font-size: 1rem;
+    h3 .sub-num {
+      font-family: var(--mono);
+      font-size: 0.82rem;
+      color: var(--muted);
+      font-weight: 400;
+      margin-right: 6px;
     }
 
-    ul, ol {
-      margin: 0 0 18px 22px;
-      padding: 0;
-    }
+    p { margin-bottom: 16px; }
+    ul, ol { margin: 0 0 18px 20px; }
+    li { margin-bottom: 8px; line-height: 1.7; }
 
-    li { margin: 0 0 8px; }
+    strong { font-weight: 700; }
+    em { font-style: italic; }
+
+    code {
+      font-family: var(--mono);
+      font-size: 0.87em;
+      background: #ededea;
+      padding: 1px 5px;
+      border-radius: 4px;
+    }
 
     .intro-box,
-    .callout,
     .index-box,
     .scheme-box {
       background: var(--paper);
@@ -94,74 +111,229 @@
 
     .callout {
       background: var(--soft);
+      border: 1px solid #c8d8f8;
       border-left: 4px solid var(--accent);
-      padding-left: 16px;
+      border-radius: 10px;
+      padding: 18px 20px;
+      margin: 24px 0;
+      font-size: 0.97rem;
     }
 
-    .index-box ol {
-      margin-bottom: 0;
+    .callout.green {
+      background: #edfaf6;
+      border-color: #a7e3d4;
+      border-left-color: var(--accent-2);
     }
 
-    .scheme-grid {
-      display: grid;
-      grid-template-columns: repeat(4, 1fr);
-      gap: 12px;
-      margin-top: 10px;
+    .callout.amber {
+      background: #fff8ed;
+      border-color: #f5d98a;
+      border-left-color: #c47a00;
+      color: #5a3800;
     }
 
-    .scheme-card {
+    .callout.red {
+      background: #fff1f1;
+      border-color: #f5b8b8;
+      border-left-color: var(--red);
+    }
+
+    .callout-label {
+      font-family: var(--mono);
+      font-size: 0.74rem;
+      letter-spacing: 0.08em;
+      text-transform: uppercase;
+      font-weight: 600;
+      margin-bottom: 6px;
+      opacity: 0.7;
+    }
+
+    .doc-header {
+      border-bottom: 2px solid var(--ink);
+      padding-bottom: 28px;
+      margin-bottom: 52px;
+    }
+
+    .doc-header .eyebrow {
+      font-family: var(--mono);
+      font-size: 0.78rem;
+      letter-spacing: 0.1em;
+      text-transform: uppercase;
+      color: var(--muted);
+      margin-bottom: 10px;
+    }
+
+    .doc-header h1 {
+      font-size: 2rem;
+      font-weight: 700;
+      letter-spacing: -0.03em;
+      line-height: 1.2;
+      margin-bottom: 12px;
+    }
+
+    .doc-header .meta {
+      font-size: 0.88rem;
+      color: var(--muted);
+      display: flex;
+      flex-wrap: wrap;
+      gap: 16px;
+    }
+
+    .doc-header .meta span { display: flex; align-items: center; gap: 5px; }
+
+    .toc {
       background: var(--soft-2);
       border: 1px solid var(--line);
       border-radius: 12px;
-      padding: 14px;
-      font-size: 0.95rem;
+      padding: 20px 24px;
+      margin-bottom: 52px;
+      font-size: 0.92rem;
     }
 
-    .scheme-card strong {
-      display: block;
-      margin-bottom: 6px;
-      color: var(--accent);
+    .toc-title {
+      font-family: var(--mono);
+      font-size: 0.75rem;
+      letter-spacing: 0.08em;
+      text-transform: uppercase;
+      color: var(--muted);
+      margin-bottom: 12px;
     }
 
-    table {
-      width: 100%;
-      border-collapse: collapse;
-      margin: 22px 0;
+    .toc ol { padding-left: 18px; color: var(--accent); }
+    .toc li { margin-bottom: 5px; }
+    .toc a { color: var(--accent); text-decoration: none; font-weight: 600; }
+    .toc a:hover { text-decoration: underline; }
+
+    .integration-note {
+      background: #fff8ed;
+      border: 1px solid #f5d98a;
+      border-radius: 10px;
+      padding: 14px 18px;
+      font-size: 0.9rem;
+      color: #7c5a00;
+      margin-bottom: 40px;
+    }
+
+    .scheme-grid,
+    .mono-grid,
+    .scenario-grid,
+    .future-grid {
+      display: grid;
+      gap: 14px;
+      margin: 20px 0;
+    }
+
+    .scheme-grid { grid-template-columns: repeat(4, 1fr); gap: 12px; }
+    .mono-grid { grid-template-columns: repeat(4, minmax(0, 1fr)); gap: 10px; margin: 14px 0 18px; }
+    .scenario-grid { grid-template-columns: repeat(auto-fill, minmax(200px, 1fr)); }
+    .future-grid { grid-template-columns: repeat(auto-fill, minmax(220px, 1fr)); }
+
+    .scheme-card,
+    .mono-item,
+    .scenario-card,
+    .future-card {
       background: var(--paper);
       border: 1px solid var(--line);
       border-radius: 12px;
-      overflow: hidden;
-      display: block;
+      padding: 14px;
     }
 
-    thead {
-      background: #f2f5fb;
-    }
+    .scheme-card { background: var(--soft-2); font-size: 0.95rem; }
+    .scheme-card strong { display: block; margin-bottom: 6px; color: var(--accent); }
 
-    th, td {
-      padding: 12px 14px;
-      text-align: left;
-      border-bottom: 1px solid var(--line);
-      font-size: 0.96rem;
-      vertical-align: top;
-    }
-
-    .mono-grid {
-      display: grid;
-      grid-template-columns: repeat(4, minmax(0,1fr));
-      gap: 10px;
-      margin: 14px 0 18px;
-    }
     .mono-item {
-      background: var(--paper);
-      border: 1px solid var(--line);
-      border-radius: 10px;
       padding: 10px 12px;
       text-align: center;
       font-weight: 600;
     }
 
+    .scenario-card {
+      border: 1.5px solid var(--line);
+      border-radius: 14px;
+      padding: 20px;
+      transition: border-color .2s, box-shadow .2s;
+    }
+
+    .scenario-card:hover {
+      border-color: var(--accent);
+      box-shadow: 0 4px 14px rgba(27,63,139,0.1);
+    }
+
+    .scenario-card .tag {
+      display: inline-block;
+      font-size: 0.73rem;
+      font-weight: 700;
+      letter-spacing: .07em;
+      text-transform: uppercase;
+      background: var(--soft);
+      color: var(--accent);
+      border-radius: 6px;
+      padding: 2px 8px;
+      margin-bottom: 12px;
+      font-family: var(--mono);
+    }
+
+    .scenario-card h4,
+    .future-card h4 {
+      font-size: 0.97rem;
+      font-weight: 700;
+      margin-bottom: 8px;
+    }
+
+    .scenario-card p,
+    .future-card p {
+      font-size: 0.86rem;
+      color: var(--muted);
+      margin: 0;
+      line-height: 1.6;
+    }
+
+    .scenario-card .recipe,
+    .future-card .maturity {
+      margin-top: 10px;
+      font-family: var(--mono);
+      font-size: 0.82rem;
+      color: var(--accent);
+    }
+
+    .future-card { padding: 18px; }
+    .future-card .fc-icon { font-size: 1.5rem; margin-bottom: 10px; display: block; }
+    .future-card .maturity { font-size: 0.75rem; font-weight: 600; }
+
+    .table-wrap {
+      overflow-x: auto;
+      margin: 24px 0;
+      border-radius: 12px;
+      border: 1px solid var(--line);
+      box-shadow: 0 1px 4px rgba(0,0,0,0.05);
+    }
+
+    table {
+      width: 100%;
+      border-collapse: collapse;
+      background: var(--paper);
+      font-size: 0.93rem;
+    }
+
+    thead { background: #f0f4fb; }
+
+    th, td {
+      padding: 12px 16px;
+      text-align: left;
+      border-bottom: 1px solid var(--line);
+      vertical-align: top;
+    }
+
+    th {
+      font-weight: 700;
+      font-size: 0.85rem;
+      letter-spacing: 0.03em;
+      border-bottom: 2px solid var(--line);
+      white-space: nowrap;
+    }
+
     tr:last-child td { border-bottom: none; }
+    tr:hover td { background: var(--soft-2); }
 
     .media-slot {
       margin: 24px 0;
@@ -179,26 +351,345 @@
       font-style: italic;
       line-height: 1.4;
       text-align: center;
-    } 
+    }
 
-    .refs { padding-left: 20px; }
-    .refs li { margin-bottom: 12px; }
+    .tabs { display: flex; gap: 6px; flex-wrap: wrap; margin-bottom: 0; }
+
+    .tab-btn {
+      padding: 8px 18px;
+      border: 1.5px solid var(--line);
+      border-radius: 999px;
+      background: var(--paper);
+      cursor: pointer;
+      font-size: 0.88rem;
+      font-family: inherit;
+      font-weight: 600;
+      color: var(--muted);
+      transition: all .15s;
+    }
+
+    .tab-btn.active {
+      background: var(--accent);
+      color: #fff;
+      border-color: var(--accent);
+    }
+
+    .tab-btn:hover:not(.active) { border-color: var(--accent); color: var(--accent); }
+    .tabs-panel { margin-top: 16px; }
+    .tab-content { display: none; }
+    .tab-content.active { display: block; }
+
+    .chart-wrap,
+    .radar-wrap {
+      background: var(--paper);
+      border: 1px solid var(--line);
+      border-radius: 14px;
+      padding: 28px;
+      margin: 24px 0;
+    }
+
+    .chart-title { font-weight: 700; font-size: 1rem; margin-bottom: 4px; }
+
+    .chart-subtitle {
+      font-size: 0.84rem;
+      color: var(--muted);
+      margin-bottom: 24px;
+      font-family: var(--mono);
+    }
+
+    .bar-group { margin-bottom: 16px; }
+
+    .bar-label {
+      font-size: 0.87rem;
+      font-weight: 600;
+      margin-bottom: 5px;
+      display: flex;
+      justify-content: space-between;
+      align-items: baseline;
+    }
+
+    .bar-label .val {
+      font-family: var(--mono);
+      font-weight: 400;
+      color: var(--muted);
+      font-size: 0.83rem;
+    }
+
+    .bar-track,
+    .compare-bar-wrap {
+      background: #e8e8e3;
+      border-radius: 6px;
+      overflow: hidden;
+    }
+
+    .bar-track { height: 24px; }
+
+    .bar-fill,
+    .compare-bar {
+      height: 100%;
+      border-radius: 6px;
+      transition: width 1.3s cubic-bezier(.4,0,.2,1);
+      width: 0;
+    }
+
+    .bar-fill {
+      display: flex;
+      align-items: center;
+    }
+
+    .bar-fill.blue { background: #1b3f8b; }
+    .bar-fill.teal { background: #0e6655; }
+    .bar-fill.amber { background: #b45309; }
+    .bar-fill.red { background: #b91c1c; }
+    .bar-fill.purple { background: #6d28d9; }
+
+    .bar-inner-label {
+      color: #fff;
+      font-size: 0.76rem;
+      font-weight: 600;
+      padding-left: 10px;
+      white-space: nowrap;
+      overflow: hidden;
+      text-overflow: ellipsis;
+    }
+
+    .radar-wrap {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 28px;
+      align-items: flex-start;
+    }
+
+    .radar-wrap svg { flex-shrink: 0; }
+    .radar-legend { flex: 1; min-width: 220px; }
+
+    .legend-row {
+      display: flex;
+      align-items: flex-start;
+      gap: 10px;
+      margin-bottom: 12px;
+      font-size: 0.9rem;
+    }
+
+    .legend-dot {
+      width: 13px;
+      height: 13px;
+      border-radius: 50%;
+      flex-shrink: 0;
+      margin-top: 3px;
+    }
+
+    .legend-sub { font-size: 0.82rem; color: var(--muted); margin-top: 2px; }
+
+    .checklist { list-style: none; padding: 0; margin: 0 0 20px; }
+
+    .checklist li {
+      display: flex;
+      align-items: flex-start;
+      gap: 12px;
+      margin-bottom: 14px;
+      padding: 14px 16px;
+      background: var(--paper);
+      border: 1px solid var(--line);
+      border-radius: 10px;
+      font-size: 0.97rem;
+    }
+
+    .check-icon {
+      width: 22px;
+      height: 22px;
+      background: var(--accent-2);
+      border-radius: 50%;
+      color: #fff;
+      font-size: 0.75rem;
+      font-weight: 700;
+      flex-shrink: 0;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      margin-top: 1px;
+    }
+
+    .pill {
+      display: inline-block;
+      background: var(--soft);
+      color: var(--accent);
+      border-radius: 999px;
+      padding: 2px 10px;
+      font-size: 0.85rem;
+      font-weight: 700;
+      font-family: var(--mono);
+    }
+
+    .video-wrap {
+      width: 100%;
+      margin: 24px 0 6px;
+      border-radius: 16px;
+      overflow: hidden;
+      border: 1px solid var(--line);
+      background: #111;
+      aspect-ratio: 16 / 9;
+    }
+
+    .video-wrap iframe {
+      width: 100%;
+      height: 100%;
+      border: 0;
+      display: block;
+    }
+
+    .video-caption {
+      font-size: 0.83rem;
+      color: var(--muted);
+      font-family: var(--mono);
+      margin-bottom: 0;
+    }
+
+    .video-fallback a {
+      position: relative;
+      display: block;
+      width: 100%;
+      height: 100%;
+    }
+
+    .video-fallback img {
+      width: 100%;
+      height: 100%;
+      object-fit: cover;
+    }
+
+    .play-btn {
+      position: absolute;
+      inset: 50% auto auto 50%;
+      transform: translate(-50%, -50%);
+      font-size: 64px;
+      color: white;
+      text-shadow: 0 4px 20px black;
+    }
+
+    .vram-row { margin-bottom: 22px; }
+
+    .vram-label {
+      font-size: 0.9rem;
+      font-weight: 700;
+      margin-bottom: 7px;
+      display: flex;
+      align-items: baseline;
+      gap: 8px;
+    }
+
+    .vram-label .users {
+      font-size: 0.84rem;
+      font-weight: 400;
+      color: var(--accent-2);
+      font-family: var(--mono);
+    }
+
+    .vram-bar {
+      height: 30px;
+      border-radius: 8px;
+      overflow: hidden;
+      display: flex;
+    }
+
+    .vram-seg {
+      display: flex;
+      align-items: center;
+      padding-left: 10px;
+      font-size: 0.78rem;
+      font-weight: 600;
+      color: #fff;
+    }
+
+    .refs { padding-left: 22px; }
+    .refs li { margin-bottom: 12px; font-size: 0.93rem; }
+    .refs a { color: var(--accent); }
+
+    .insight-box {
+      background: var(--ink);
+      color: #fff;
+      border-radius: 14px;
+      padding: 28px 32px;
+      margin: 28px 0;
+      position: relative;
+      overflow: hidden;
+    }
+
+    .insight-box::before {
+      content: '"';
+      position: absolute;
+      top: -20px;
+      left: 20px;
+      font-size: 12rem;
+      line-height: 1;
+      color: rgba(255,255,255,0.06);
+      font-family: Georgia, serif;
+      pointer-events: none;
+    }
+
+    .insight-box .label {
+      font-family: var(--mono);
+      font-size: 0.72rem;
+      letter-spacing: 0.12em;
+      text-transform: uppercase;
+      color: rgba(255,255,255,0.5);
+      margin-bottom: 10px;
+    }
+
+    .insight-box p {
+      font-size: 1.08rem;
+      line-height: 1.65;
+      margin: 0;
+      position: relative;
+      z-index: 1;
+    }
+
+    .compare-track { margin: 24px 0; }
+
+    .compare-row {
+      display: flex;
+      align-items: center;
+      gap: 14px;
+      margin-bottom: 10px;
+      font-size: 0.9rem;
+    }
+
+    .compare-name { min-width: 180px; font-weight: 600; }
+    .compare-bar-wrap { flex: 1; height: 18px; }
+    .compare-val {
+      font-family: var(--mono);
+      font-size: 0.82rem;
+      color: var(--muted);
+      min-width: 60px;
+      text-align: right;
+    }
+
+    .back-top {
+      display: inline-block;
+      margin-top: 40px;
+      font-size: 0.85rem;
+      font-family: var(--mono);
+      color: var(--muted);
+      text-decoration: none;
+      border-bottom: 1px solid var(--line);
+      padding-bottom: 2px;
+    }
+
+    .back-top:hover { color: var(--accent); border-color: var(--accent); }
 
     @media (max-width: 820px) {
-      .scheme-grid {
-        grid-template-columns: 1fr 1fr;
-      }
+      .scheme-grid { grid-template-columns: 1fr 1fr; }
     }
 
     @media (max-width: 640px) {
       .page { padding: 32px 18px 56px; }
-      h2 { font-size: 1.35rem; }
+      h2 { font-size: 1.3rem; }
       p, li, th, td { font-size: 0.98rem; }
+      .doc-header h1 { font-size: 1.55rem; }
       .scheme-grid { grid-template-columns: 1fr; }
-    }
-
-    @media (max-width: 640px) {
       .mono-grid { grid-template-columns: 1fr 1fr; }
+      .radar-wrap { flex-direction: column; }
+      .compare-name { min-width: 130px; font-size: 0.82rem; }
     }
   </style>
 
@@ -722,107 +1213,579 @@
   <div class="media-slot">Espacio para insertar aquí un gráfico comparativo de throughput entre static batching, continuous batching y PagedAttention en un escenario de serving real.</div>
 </section>
 
-    <section>
-      <h2>Análisis comparativo de trade-offs</h2>
-      <p>
-        Comparar técnicas de optimización exige evitar una visión simplista en la que una estrategia sería siempre
-        mejor que otra. En realidad, cada una responde a un cuello de botella distinto. La cuantización resulta
-        especialmente útil cuando el problema principal es el tamaño del modelo y el coste de memoria asociado a
-        sus parámetros. La KV cache es decisiva cuando la generación autoregresiva introduce recomputación excesiva.
-        El batching y el scheduling cobran mayor relevancia cuando el reto es servir muchas solicitudes concurrentes.
-      </p>
-      <p>
-        Desde el punto de vista de la calidad, la cuantización es la técnica que más claramente puede introducir
-        degradación si la reducción de precisión es demasiado agresiva. La KV cache, en su forma básica, no altera
-        la lógica del modelo, aunque sus variantes comprimidas sí pueden afectar al rendimiento. Las estrategias de
-        serving no suelen modificar directamente el contenido generado, pero sí cambian de forma importante la
-        experiencia de uso al afectar a latencia y capacidad de respuesta.
-      </p>
+ <section id="trade-offs">
+    <h2>Análisis comparativo de trade-offs</h2>
+ 
+    <p>
+      Comparar técnicas de optimización de inferencia exige evitar una visión simplista en la que una estrategia
+      sería siempre mejor que otra. Cada técnica responde a un cuello de botella diferente: la cuantización
+      actúa sobre el peso del modelo en memoria; la gestión de KV cache reduce la recomputación durante la
+      generación autoregresiva; y el batching mejora la utilización del hardware cuando coexisten muchas
+      peticiones concurrentes.
+    </p>
+    <p>
+      El error más común en despliegues de producción es aplicar una sola técnica en aislamiento. La evidencia
+      empírica muestra que la combinación sinérgica de cuantización + PagedAttention + continuous batching
+      supera en <strong>5× el throughput</strong> de un sistema naive con el mismo hardware y el mismo modelo,
+      sin modificar la calidad de salida de forma apreciable. Entender en qué escenario predomina cada
+      limitación es la clave para elegir la combinación adecuada.
+    </p>
+ 
+    <!-- ── 5.1 Trilema ── -->
+    <h3><span class="sub-num">5.1</span> El trilema de la inferencia: Latencia · Throughput · Coste</h3>
+    <p>
+      El diseño de un sistema de inferencia eficiente es fundamentalmente un problema de <strong>optimización
+      bajo restricciones múltiples y en conflicto</strong>. Los ingenieros deben navegar por la tensión
+      permanente entre tres dimensiones que no pueden maximizarse simultáneamente: la latencia por petición,
+      el throughput total del sistema y el coste operativo por token generado.
+    </p>
+    <p>
+      Esta tensión es estructural: reducir la latencia obliga a procesar lotes más pequeños, lo que penaliza
+      el throughput; maximizar el throughput requiere lotes grandes que aumentan el tiempo de espera de cada
+      petición individual; minimizar el coste conduce a cuantizaciones agresivas o hardware de menor precio
+      que imponen sus propias limitaciones. No hay solución libre de compromisos —solo configuraciones
+      óptimas para cada caso de uso concreto.
+    </p>
+ 
+    <div class="tabs" id="trilema-tabs">
+      <button class="tab-btn active" onclick="switchTab('lat', event)">⚡ Latencia baja</button>
+      <button class="tab-btn"        onclick="switchTab('thr', event)">📈 Alto throughput</button>
+      <button class="tab-btn"        onclick="switchTab('cos', event)">💰 Bajo coste</button>
+    </div>
+    <div class="tabs-panel">
+      <div id="tab-lat" class="tab-content active">
+        <div class="callout">
+          <div class="callout-label">Escenario: chat interactivo / asistentes en tiempo real</div>
+          <strong>Prioridad: TTFT (Time to First Token) e ITL (Inter-Token Latency) mínimos.</strong><br><br>
+          Las técnicas clave son <em>speculative decoding</em> —el modelo draft genera varios tokens en paralelo
+          que el modelo principal verifica en una sola pasada—, lotes unitarios o de tamaño muy reducido, y
+          evitar colas de espera en el scheduler. La consecuencia directa es un throughput total más bajo y
+          un coste por token más alto. Para contextos muy largos, se añade prefill chunking para evitar
+          bloquear el modelo durante decenas de segundos antes de producir el primer token.
+        </div>
+      </div>
+      <div id="tab-thr" class="tab-content">
+        <div class="callout">
+          <div class="callout-label">Escenario: procesamiento offline / pipelines de datos masivos</div>
+          <strong>Prioridad: tokens generados por segundo, maximizando la ocupación de la GPU.</strong><br><br>
+          Se maximiza el batch size hasta el punto de saturación del hardware, se aplica cuantización a INT4
+          para liberar VRAM que se reasigna al KV cache, y se emplea <em>continuous batching</em> para
+          mantener la GPU al 100 % de ocupación. La latencia individual de cada petición aumenta significativamente,
+          pero el coste por millón de tokens se reduce de forma drástica. En escenarios offline puros, esta
+          penalización de latencia es irrelevante.
+        </div>
+      </div>
+      <div id="tab-cos" class="tab-content">
+        <div class="callout">
+          <div class="callout-label">Escenario: APIs internas / servicios de bajo tráfico / edge</div>
+          <strong>Prioridad: minimizar el gasto en infraestructura de GPU.</strong><br><br>
+          Se combinan cuantización agresiva (INT4, GGUF) con hardware de menor coste (GPU de consumo, instancias
+          spot) y modelos más pequeños con buena relación calidad-precio. Se acepta una latencia moderada.
+          El riesgo principal es la degradación de calidad si la cuantización es excesiva para la tarea:
+          INT4 puede penalizar el razonamiento matemático y la generación de código hasta un 8–10 % según
+          el benchmark.
+        </div>
+      </div>
+    </div>
+ 
+    <!-- ── 5.2 Throughput comparativo ── -->
+    <h3><span class="sub-num">5.2</span> Throughput comparado: estrategias de serving</h3>
+    <p>
+      El siguiente gráfico ilustra la ganancia relativa de throughput (tokens/s) que reportan benchmarks
+      sobre hardware H100 al aplicar técnicas progresivamente más avanzadas. Los valores son relativos al
+      baseline de batching estático sin optimizaciones (= 100 %). La escala representa el throughput
+      relativo normalizado para facilitar la comparación.
+    </p>
+ 
+    <div class="chart-wrap">
+      <div class="chart-title">Throughput relativo según estrategia de serving (baseline = static batching = 100 %)</div>
+      <div class="chart-subtitle">Hardware: NVIDIA H100 80 GB · Modelo: Llama-3-70B · Valores de referencia de la literatura</div>
+ 
+      <div class="bar-group">
+        <div class="bar-label">Static batching (baseline) <span class="val">100 %</span></div>
+        <div class="bar-track"><div class="bar-fill blue" data-pct="20"><span class="bar-inner-label">≡ 100 %</span></div></div>
+      </div>
+      <div class="bar-group">
+        <div class="bar-label">Continuous batching (vLLM) <span class="val">~220 %</span></div>
+        <div class="bar-track"><div class="bar-fill blue" data-pct="44"><span class="bar-inner-label">2.2×</span></div></div>
+      </div>
+      <div class="bar-group">
+        <div class="bar-label">PagedAttention + continuous batching <span class="val">~300 %</span></div>
+        <div class="bar-track"><div class="bar-fill teal" data-pct="60"><span class="bar-inner-label">3.0×</span></div></div>
+      </div>
+      <div class="bar-group">
+        <div class="bar-label">SGLang (RadixAttention + structured prompts) <span class="val">~370 %</span></div>
+        <div class="bar-track"><div class="bar-fill teal" data-pct="74"><span class="bar-inner-label">3.7×</span></div></div>
+      </div>
+      <div class="bar-group">
+        <div class="bar-label">TensorRT-LLM (kernel fusion, NVIDIA) <span class="val">~400 %</span></div>
+        <div class="bar-track"><div class="bar-fill amber" data-pct="80"><span class="bar-inner-label">4.0×</span></div></div>
+      </div>
+      <div class="bar-group">
+        <div class="bar-label">INT4 + TensorRT-LLM (mayor batch en la misma VRAM) <span class="val">~500 %</span></div>
+        <div class="bar-track"><div class="bar-fill amber" data-pct="100"><span class="bar-inner-label">5.0× — combinación completa</span></div></div>
+      </div>
+    </div>
+ 
+    <div class="callout green">
+      <div class="callout-label">Lectura del gráfico</div>
+      La progresión muestra que <strong>las mayores ganancias no vienen del hardware sino del algoritmo.</strong>
+      Pasar de batching estático a continuous batching con PagedAttention multiplica el throughput
+      aproximadamente por 3× sin cambiar el modelo ni el hardware. Añadir cuantización INT4 libera
+      VRAM que permite aumentar el batch size, alcanzando una mejora total de ~5×. Invertir en una
+      GPU más cara, sin cambiar el software de serving, produciría ganancias mucho menores.
+    </div>
+ 
+    <!-- ── 5.3 Radar ── -->
+    <h3><span class="sub-num">5.3</span> Perfil de cada técnica por dimensión de impacto</h3>
+    <p>
+      El diagrama de radar compara las tres técnicas principales en cinco dimensiones clave: ahorro de
+      memoria, reducción de latencia, mejora de throughput, control de coste operativo y preservación de
+      la calidad del modelo. Una puntuación más alta (más exterior) significa mayor beneficio en esa dimensión.
+      Las técnicas no compiten entre sí: se complementan.
+    </p>
+ 
+    <div class="radar-wrap">
+      <svg viewBox="0 0 340 330" width="340" height="330" aria-label="Diagrama radar de técnicas de optimización">
+        <g transform="translate(170,170)">
+          <!-- Anillos de referencia -->
+          <polygon points="0,-100 95.1,-30.9 58.8,80.9 -58.8,80.9 -95.1,-30.9" fill="none" stroke="#e0e0d8" stroke-width="1"/>
+          <polygon points="0,-75 71.3,-23.2 44.1,60.7 -44.1,60.7 -71.3,-23.2" fill="none" stroke="#e0e0d8" stroke-width="1"/>
+          <polygon points="0,-50 47.6,-15.5 29.4,40.5 -29.4,40.5 -47.6,-15.5" fill="none" stroke="#e0e0d8" stroke-width="1"/>
+          <polygon points="0,-25 23.8,-7.7 14.7,20.2 -14.7,20.2 -23.8,-7.7" fill="none" stroke="#e0e0d8" stroke-width="1"/>
+          <!-- Etiquetas de anillos -->
+          <text x="4" y="-26" font-size="8" fill="#bbb" font-family="monospace">25</text>
+          <text x="4" y="-51" font-size="8" fill="#bbb" font-family="monospace">50</text>
+          <text x="4" y="-76" font-size="8" fill="#bbb" font-family="monospace">75</text>
+          <text x="4" y="-101" font-size="8" fill="#bbb" font-family="monospace">100</text>
+          <!-- Ejes radiales -->
+          <line x1="0" y1="0" x2="0" y2="-100" stroke="#ccc" stroke-width="1"/>
+          <line x1="0" y1="0" x2="95.1" y2="-30.9" stroke="#ccc" stroke-width="1"/>
+          <line x1="0" y1="0" x2="58.8" y2="80.9" stroke="#ccc" stroke-width="1"/>
+          <line x1="0" y1="0" x2="-58.8" y2="80.9" stroke="#ccc" stroke-width="1"/>
+          <line x1="0" y1="0" x2="-95.1" y2="-30.9" stroke="#ccc" stroke-width="1"/>
+          <!-- Etiquetas de ejes -->
+          <text x="0" y="-114" text-anchor="middle" font-size="11" fill="#444" font-weight="600">Memoria</text>
+          <text x="106" y="-26" text-anchor="start" font-size="11" fill="#444" font-weight="600">Latencia</text>
+          <text x="63" y="98" text-anchor="middle" font-size="11" fill="#444" font-weight="600">Throughput</text>
+          <text x="-63" y="98" text-anchor="middle" font-size="11" fill="#444" font-weight="600">Coste</text>
+          <text x="-106" y="-26" text-anchor="end" font-size="11" fill="#444" font-weight="600">Calidad</text>
+          <!-- Cuantización: Memoria=95, Latencia=65, Throughput=80, Coste=90, Calidad=40 -->
+          <polygon
+            points="0,-95 61.8,-20.1 47.0,64.7 -52.9,72.8 -38.0,-12.4"
+            fill="rgba(27,63,139,0.14)" stroke="#1b3f8b" stroke-width="2.5" stroke-linejoin="round"/>
+          <!-- KV Cache/PagedAttention: Memoria=55, Latencia=88, Throughput=72, Coste=60, Calidad=95 -->
+          <polygon
+            points="0,-88 83.7,-27.2 42.3,57.2 -35.3,48.5 -52.3,-17.0"
+            fill="rgba(14,102,85,0.14)" stroke="#0e6655" stroke-width="2.5" stroke-linejoin="round"/>
+          <!-- Continuous Batching: Memoria=45, Latencia=52, Throughput=95, Coste=72, Calidad=90 -->
+          <polygon
+            points="0,-45 49.5,-16.1 55.9,76.9 -42.4,58.2 -85.6,-27.8"
+            fill="rgba(180,83,9,0.12)" stroke="#b45309" stroke-width="2.5" stroke-linejoin="round"/>
+        </g>
+      </svg>
+ 
+      <div class="radar-legend">
+        <p style="margin:0 0 18px;font-size:0.87rem;color:var(--muted);line-height:1.6;">
+          Puntuación 0–100 en cada eje (mayor = más beneficio).
+          Las tres técnicas cubren diferentes zonas del radar:
+          la combinación de todas ellas cubre casi todo el espacio.
+        </p>
+        <div class="legend-row">
+          <div class="legend-dot" style="background:#1b3f8b"></div>
+          <div>
+            <strong>Cuantización (INT4/INT8)</strong>
+            <div class="legend-sub">Domina en ahorro de memoria y reducción de coste. Impacto moderado en latencia.</div>
+          </div>
+        </div>
+        <div class="legend-row">
+          <div class="legend-dot" style="background:#0e6655"></div>
+          <div>
+            <strong>KV cache / PagedAttention</strong>
+            <div class="legend-sub">Domina en mejora de latencia y preservación de calidad. Reduce fragmentación de VRAM al &lt;4 %.</div>
+          </div>
+        </div>
+        <div class="legend-row">
+          <div class="legend-dot" style="background:#b45309"></div>
+          <div>
+            <strong>Continuous batching</strong>
+            <div class="legend-sub">Domina en throughput total. Mantiene la GPU al 100 % de ocupación de forma continua.</div>
+          </div>
+        </div>
+        <p style="margin:16px 0 0;font-size:0.82rem;color:var(--muted);">
+          ⚠ La calidad en cuantización varía según la tarea:
+          INT8 es prácticamente transparente; INT4 puede degradar
+          razonamiento matemático y generación de código entre
+          un 5 y un 10 % según los benchmarks.
+        </p>
+      </div>
+    </div>
+ 
+    <!-- ── 5.4 Tabla ampliada ── -->
+    <h3><span class="sub-num">5.4</span> Tabla comparativa ampliada</h3>
+    <p>
+      La siguiente tabla consolida las ocho técnicas principales con su mejora principal, su trade-off
+      dominante, el escenario de despliegue más adecuado y las herramientas de referencia del ecosistema.
+    </p>
+ 
+    <div class="table-wrap">
       <table>
         <thead>
           <tr>
             <th>Técnica</th>
             <th>Mejora principal</th>
             <th>Trade-off dominante</th>
+            <th>Escenario idóneo</th>
+            <th>Herramienta de referencia</th>
           </tr>
         </thead>
         <tbody>
           <tr>
-            <td>Cuantización</td>
-            <td>Reduce memoria y coste</td>
-            <td>Puede degradar calidad</td>
+            <td><strong>Cuantización INT8</strong></td>
+            <td>–50 % memoria de pesos; sin degradación perceptible en la mayoría de tareas</td>
+            <td>Overhead mínimo de des-cuantización en tiempo de inferencia</td>
+            <td>Producción general, cualquier tarea que use BF16 o FP16 actualmente</td>
+            <td><code>bitsandbytes</code>, GPTQ</td>
           </tr>
           <tr>
-            <td>KV cache</td>
-            <td>Reduce recomputación y latencia</td>
-            <td>Aumenta el consumo de memoria intermedia</td>
+            <td><strong>Cuantización INT4</strong></td>
+            <td>–75 % memoria; hasta 12× más usuarios concurrentes en la misma VRAM</td>
+            <td>Caída de hasta 8–10 % en benchmarks de código y razonamiento complejo</td>
+            <td>Procesamiento offline, tareas de conocimiento general, edge/dispositivo</td>
+            <td>AWQ, GPTQ, GGUF</td>
           </tr>
           <tr>
-            <td>Batching</td>
-            <td>Incrementa throughput</td>
-            <td>Puede aumentar tiempos de espera</td>
+            <td><strong>KV cache básico</strong></td>
+            <td>Elimina recomputación de K y V en cada paso autoregresivo → reducción de latencia lineal</td>
+            <td>Crece linealmente con la longitud del contexto; ocupa VRAM de forma creciente</td>
+            <td>Chats y respuestas largas; prácticamente obligatorio en cualquier modelo moderno</td>
+            <td>Todos los motores modernos (vLLM, TGI, TRT-LLM)</td>
           </tr>
           <tr>
-            <td>Scheduling / serving</td>
-            <td>Optimiza el sistema completo</td>
-            <td>Requiere decisiones complejas y dependientes del escenario</td>
+            <td><strong>PagedAttention</strong></td>
+            <td>Fragmentación de memoria &lt;4 % (vs. 60–80 % en implementaciones naive)</td>
+            <td>Overhead de gestión de páginas en el scheduler; mayor complejidad del motor</td>
+            <td>Serving de alta concurrencia con usuarios simultáneos y longitudes de contexto variables</td>
+            <td>vLLM</td>
+          </tr>
+          <tr>
+            <td><strong>Prefix caching / RadixAttention</strong></td>
+            <td>Reutilización de la KV cache para system prompts y contextos compartidos</td>
+            <td>Solo útil si los prefijos se repiten; requiere política de evicción del caché</td>
+            <td>RAG, sistemas multi-agente, aplicaciones con contexto fijo o sistema prompt largo</td>
+            <td>SGLang, vLLM</td>
+          </tr>
+          <tr>
+            <td><strong>Static batching</strong></td>
+            <td>Implementación simple; fácil de depurar y predecir</td>
+            <td>GPU inactiva al final del batch; latencia irregular según la secuencia más larga</td>
+            <td>Cargas de trabajo homogéneas y predecibles; prototipado y experimentación</td>
+            <td>Implementación manual</td>
+          </tr>
+          <tr>
+            <td><strong>Continuous batching</strong></td>
+            <td>2–3× throughput respecto a static; mantiene la GPU al 100 % de ocupación</td>
+            <td>Mayor complejidad de implementación y scheduling; más difícil de depurar</td>
+            <td>Serving general de alta concurrencia; estándar de facto en producción</td>
+            <td>vLLM, TGI, SGLang, TRT-LLM</td>
+          </tr>
+          <tr>
+            <td><strong>Speculative decoding</strong></td>
+            <td>2–4× reducción de latencia (ITL) en respuestas largas; sin pérdida de calidad</td>
+            <td>Requiere un draft model adicional en memoria; beneficio variable según distribución del vocabulario</td>
+            <td>Chat interactivo, agentes de razonamiento, escenarios con latencia crítica</td>
+            <td>vLLM, TensorRT-LLM</td>
           </tr>
         </tbody>
       </table>
-      <p>
-        La conclusión comparativa más importante es que la eficiencia no se logra eligiendo una única técnica,
-        sino combinando herramientas distintas según cuál sea la restricción dominante del sistema: memoria,
-        latencia, throughput o coste.
-      </p>
-      <div class="media-slot">Espacio para insertar una tabla ampliada o gráfico de trade-offs entre calidad, memoria, latencia y throughput.</div>
-    </section>
-
-    <section>
-      <h2>Casos representativos</h2>
-      <p>
-        Un primer caso representativo es el despliegue de un LLM cuantizado para reducir memoria y permitir su
-        ejecución con menos recursos. En este escenario, la cuantización no se evalúa únicamente por el porcentaje
-        de compresión, sino por el equilibrio que logra entre ahorro de memoria y mantenimiento de la calidad.
-      </p>
-      <p>
-        Un segundo caso relevante es el serving de LLMs con contextos largos o con múltiples usuarios simultáneos.
-        Aquí la KV cache y las políticas de batching y scheduling pasan a ser determinantes. El interés del caso
-        está en observar cómo cambia el cuello de botella: en algunos entornos domina el cómputo, mientras que en
-        otros domina la memoria o la gestión de colas.
-      </p>
-      <ul>
-        <li><strong>Caso 1:</strong> LLM cuantizado orientado a reducir memoria y coste por inferencia.</li>
-        <li><strong>Caso 2:</strong> Serving de LLM con KV cache y gestión eficiente de múltiples peticiones.</li>
-      </ul>
-      <p>
-        Ambos casos permiten mostrar que las técnicas no compiten siempre entre sí de forma excluyente. En muchos
-        escenarios, las mejores soluciones combinan compresión del modelo con estrategias de memoria y decisiones
-        de serving adaptadas al patrón de uso real.
-      </p>
-      <div class="media-slot">Espacio para insertar aquí resultados experimentales, capturas, tablas o gráficos de los casos seleccionados.</div>
-    </section>
-
-    <section>
-      <h2>Conclusiones</h2>
-      <p>
-        La optimización de la inferencia en modelos de lenguaje grandes constituye una condición esencial para
-        transformar modelos potentes en sistemas realmente desplegables. El análisis de este seminario muestra que
-        la eficiencia es una propiedad del sistema completo y no solo del modelo aislado. Reducir el tamaño de los
-        parámetros, reutilizar información intermedia y gestionar mejor las peticiones son estrategias distintas,
-        pero complementarias.
-      </p>
-      <p>
-        La cuantización actúa principalmente sobre el peso del modelo y su coste de memoria. La KV cache reduce
-        recomputación en generación autoregresiva, aunque desplaza presión hacia la memoria intermedia. El batching,
-        el scheduling y el serving eficiente mejoran el comportamiento global del sistema bajo carga real. La elección
-        adecuada depende del escenario de despliegue y de cuál sea la restricción dominante.
-      </p>
-      <div class="callout">
-        En conjunto, la inferencia eficiente en LLMs debe entenderse como un problema de diseño de sistemas: la
-        mejor estrategia no es universal, sino aquella que ofrece el equilibrio más razonable entre calidad,
-        latencia, memoria y coste en un contexto concreto.
+    </div>
+ 
+    <!-- ── 5.5 Recomendaciones por escenario ── -->
+    <h3><span class="sub-num">5.5</span> Recomendaciones por escenario de despliegue</h3>
+    <p>
+      Dado el trilema presentado en §5.1, la elección de técnicas debe estar guiada por el patrón de tráfico
+      real y los SLAs del servicio. Las cuatro configuraciones canónicas son:
+    </p>
+ 
+    <div class="scenario-grid">
+      <div class="scenario-card">
+        <span class="tag">Chat interactivo</span>
+        <h4>Baja latencia ante todo</h4>
+        <p>TTFT e ITL son las métricas críticas. El throughput total es secundario.</p>
+        <div class="recipe">Speculative decoding + INT8 + lotes pequeños + prefill chunking</div>
       </div>
-    </section>
+      <div class="scenario-card">
+        <span class="tag">Procesamiento offline</span>
+        <h4>Máximo throughput</h4>
+        <p>La latencia individual no importa. Se busca el menor coste por token generado.</p>
+        <div class="recipe">INT4 + continuous batching + batch size máximo posible</div>
+      </div>
+      <div class="scenario-card">
+        <span class="tag">RAG / agentes</span>
+        <h4>Contexto reutilizable</h4>
+        <p>Los documentos de contexto y system prompts se repiten entre peticiones.</p>
+        <div class="recipe">Prefix caching + PagedAttention + INT8</div>
+      </div>
+      <div class="scenario-card">
+        <span class="tag">Edge / dispositivo</span>
+        <h4>Memoria y energía limitadas</h4>
+        <p>El modelo debe caber en la RAM/VRAM disponible. La calidad es secundaria.</p>
+        <div class="recipe">GGUF 4-bit o 2-bit + modelos destilados (&lt;14 B params)</div>
+      </div>
+    </div>
+ 
+    <div class="callout amber">
+      <div class="callout-label">Advertencia práctica</div>
+      <strong>Ninguna configuración se debe elegir sin medir primero el tráfico real.</strong> Los benchmarks
+      de la literatura asumen distribuciones de longitud de prompt y respuesta que pueden diferir radicalmente
+      del tráfico de producción. Un sistema optimizado para el throughput puede resultar inaceptable si
+      la mayoría de usuarios espera respuestas en menos de 500 ms. La telemetría real —TTFT, ITL y
+      distribución de longitudes— es el único punto de partida válido para tomar decisiones de configuración.
+    </div>
+ 
+    <!-- ── 5.6 Vídeo vLLM ── -->
+    <h3><span class="sub-num">5.6</span> Recurso audiovisual: cómo funciona vLLM y PagedAttention</h3>
+    <p>
+      El siguiente vídeo del equipo de vLLM (UC Berkeley) explica visualmente el problema de la fragmentación
+      de memoria y cómo PagedAttention lo resuelve aplicando la analogía de la memoria virtual de los sistemas
+      operativos. Es un complemento directo para la sección de KV cache del documento compartido.
+    </p>
+    <div class="video-wrap video-fallback">
+      <a href="https://www.youtube.com/watch?v=80bIUggRJf4" target="_blank">
+        <img
+          src="https://img.youtube.com/vi/80bIUggRJf4/maxresdefault.jpg"
+          alt="vLLM: Easy, Fast, and Cheap LLM Serving with PagedAttention">
+        <span class="play-btn">▶</span>
+      </a>
+    </div>
+
+    
+    <p class="video-caption">Kwon et al. (2023), UC Berkeley. «Efficient Memory Management for LLM Serving with PagedAttention». Presentación SOSP 2023. ~18 min.</p>
+ 
+    <!-- ── 5.7 VRAM ── -->
+    <h3><span class="sub-num">5.7</span> Impacto de la cuantización en la capacidad de serving</h3>
+    <p>
+      La cuantización no solo reduce la huella del modelo en memoria: libera VRAM que puede reasignarse
+      directamente al KV cache, multiplicando el número de usuarios concurrentes soportados con el mismo
+      hardware. Este efecto secundario es con frecuencia más valioso que la reducción de pesos en sí misma
+      para sistemas de alta concurrencia.
+    </p>
+ 
+    <div class="chart-wrap">
+      <div class="chart-title">Distribución de VRAM en GPU H100 80 GB según precisión del modelo (~65 B parámetros)</div>
+      <div class="chart-subtitle">El espacio restante tras los pesos se destina íntegramente a KV cache y usuarios concurrentes con contexto 4k tokens.</div>
+ 
+      <div class="vram-row">
+        <div class="vram-label">BF16 — Pesos: 75.6 GB <span class="users">→ KV cache: 4.4 GB ≈ 4 usuarios concurrentes</span></div>
+        <div class="vram-bar">
+          <div class="vram-seg" style="width:94.5%;background:#1b3f8b;">Pesos BF16 (75.6 GB)</div>
+          <div class="vram-seg" style="width:5.5%;background:#0e6655;padding-left:4px;"></div>
+        </div>
+      </div>
+      <div class="vram-row">
+        <div class="vram-label">INT8 — Pesos: 37.8 GB <span class="users">→ KV cache: 42.2 GB ≈ 24 usuarios concurrentes</span></div>
+        <div class="vram-bar">
+          <div class="vram-seg" style="width:47.3%;background:#1b3f8b;">Pesos INT8 (37.8 GB)</div>
+          <div class="vram-seg" style="width:52.7%;background:#0e6655;">KV cache disponible</div>
+        </div>
+      </div>
+      <div class="vram-row">
+        <div class="vram-label">INT4 — Pesos: 18.9 GB <span class="users">→ KV cache: 61.1 GB ≈ 47 usuarios concurrentes</span></div>
+        <div class="vram-bar">
+          <div class="vram-seg" style="width:23.6%;background:#1b3f8b;">Pesos INT4</div>
+          <div class="vram-seg" style="width:76.4%;background:#0e6655;">KV cache (61.1 GB → 47 usuarios con contexto 4k)</div>
+        </div>
+      </div>
+    </div>
+ 
+    <div class="callout green">
+      <div class="callout-label">Conclusión del análisis de VRAM</div>
+      INT4 permite un incremento de <strong>~12× en usuarios concurrentes</strong> respecto a BF16 con el mismo
+      hardware, pasando de ~4 a ~47 usuarios con contexto de 4k tokens.
+      Dicho de otro modo: el efecto multiplicador sobre la capacidad de serving es mucho mayor que
+      el simple ahorro en el tamaño del modelo. Fuente: análisis basado en los informes técnicos
+      del seminario y benchmarks de vLLM sobre H100.
+    </div>
+ 
+  </section>
+
+<section id="conclusiones">
+    <h2>Conclusiones</h2>
+ 
+    <p>
+      La optimización de la inferencia en modelos de lenguaje grandes es un campo en evolución acelerada
+      donde los límites del hardware dictan las posibilidades del software —y viceversa. El análisis
+      realizado a lo largo de este seminario demuestra con claridad que la eficiencia sistémica no depende
+      de una única técnica, sino de la <strong>integración sinérgica de cuantización, gestión inteligente
+      de la KV cache y planificación dinámica de peticiones</strong>.
+    </p>
+    <p>
+      Cada técnica aborda un cuello de botella distinto: la cuantización actúa sobre la huella en memoria
+      de los pesos del modelo; PagedAttention elimina la fragmentación del KV cache; el continuous batching
+      maximiza la utilización de la GPU. Ninguna de las tres es suficiente por sí sola para obtener un
+      sistema competitivo en producción. Pero su combinación produce resultados que superan ampliamente
+      la suma de sus partes individuales.
+    </p>
+ 
+    <div class="insight-box">
+      <div class="label">Conclusión central del seminario</div>
+      <p>
+        No existe una configuración óptima universal para la inferencia de LLMs. Existe una configuración
+        óptima para cada caso de uso, presupuesto y estándar de calidad requerido. La elección correcta
+        solo puede determinarse a partir de un análisis de datos reales del tráfico esperado
+        —latencias, longitudes de prompt y respuesta, concurrencia pico— no de supuestos teóricos
+        ni de benchmarks genéricos.
+      </p>
+    </div>
+ 
+    <!-- ── Hallazgos principales ── -->
+    <h3>Síntesis de hallazgos principales</h3>
+    <ul class="checklist">
+      <li>
+        <div class="check-icon">1</div>
+        <div>
+          <strong>La cuantización INT8 es el primer paso indispensable en cualquier despliegue.</strong>
+          Reducir la precisión a INT8 es prácticamente gratuito en calidad —la degradación es imperceptible
+          en la mayoría de tareas— y libera hasta el 50 % de VRAM. Es la intervención con mejor ratio
+          beneficio/riesgo disponible hoy. INT4 puede alcanzar un incremento de 12× en usuarios concurrentes,
+          pero requiere evaluar el impacto en razonamiento y código antes de su adopción en producción.
+        </div>
+      </li>
+      <li>
+        <div class="check-icon">2</div>
+        <div>
+          <strong>PagedAttention ha redefinido el estándar de gestión de memoria para serving de LLMs.</strong>
+          Al aplicar el concepto de memoria virtual de los sistemas operativos al KV cache, vLLM redujo
+          el desperdicio de VRAM del 60–80 % de las implementaciones naive a menos del 4 %. Esto se ha
+          convertido en la piedra angular de todos los motores de inferencia modernos relevantes.
+        </div>
+      </li>
+      <li>
+        <div class="check-icon">3</div>
+        <div>
+          <strong>El continuous batching elimina la ineficiencia estructural del batching estático.</strong>
+          Revisar el estado del lote en cada iteración de decoding —en lugar de al final del batch completo—
+          mantiene la GPU en alta ocupación de forma continua, logrando un throughput 2–3× mayor sin
+          modificar el modelo ni su calidad de salida. Es hoy el estándar de facto en sistemas de producción.
+        </div>
+      </li>
+      <li>
+        <div class="check-icon">4</div>
+        <div>
+          <strong>La combinación de técnicas es siempre superior a su aplicación aislada.</strong>
+          Un sistema con INT4 + PagedAttention + continuous batching puede superar en hasta 5× el throughput
+          de un sistema naive, con el mismo hardware y modelo base. La sinergia entre técnicas no es aditiva
+          sino multiplicativa: cada técnica amplifica el beneficio de las demás.
+        </div>
+      </li>
+      <li>
+        <div class="check-icon">5</div>
+        <div>
+          <strong>El futuro inmediato reside en la desagregación prefill/decoding.</strong>
+          Las tendencias actuales de la industria apuntan a arquitecturas donde ambas fases se ejecutan
+          en nodos físicamente separados, optimizando el uso de GPUs de alto cómputo (para prefill) y GPUs
+          de alto ancho de banda de memoria (para decoding) de forma independiente. Esta arquitectura
+          permite escalar cada fase según su demanda real, eliminando el compromiso inherente al
+          compartir recursos entre ambas.
+        </div>
+      </li>
+    </ul>
+ 
+    <!-- ── Líneas de evolución ── -->
+    <h3>Líneas actuales de evolución del campo</h3>
+    <p>
+      Más allá de las técnicas analizadas en este seminario, el campo avanza simultáneamente en varias
+      direcciones que ampliarán el espacio de soluciones en los próximos años:
+    </p>
+ 
+    <div class="future-grid">
+      <div class="future-card">
+        <span class="fc-icon">🧩</span>
+        <h4>Mixture of Experts (MoE)</h4>
+        <p>Arquitecturas que activan solo una fracción de los parámetros por token, reduciendo el cómputo
+        efectivo sin reducir la capacidad del modelo.</p>
+        <div class="maturity">Producción → Mixtral, DeepSeek-V3</div>
+      </div>
+      <div class="future-card">
+        <span class="fc-icon">🗜️</span>
+        <h4>KV Cache Quantization</h4>
+        <p>Cuantización del propio KV cache (KVQuant) para extender el contexto efectivo sin escalar
+        el consumo de VRAM de forma lineal. Permite contextos de varios millones de tokens.</p>
+        <div class="maturity">Investigación → KVQuant [4]</div>
+      </div>
+      <div class="future-card">
+        <span class="fc-icon">⚡</span>
+        <h4>Inferencia especulativa</h4>
+        <p>Draft models entrenados para minimizar la tasa de rechazo. La próxima generación usa
+        decoding especulativo nativo del modelo principal sin model separado.</p>
+        <div class="maturity">Producción → vLLM, TRT-LLM</div>
+      </div>
+      <div class="future-card">
+        <span class="fc-icon">🔀</span>
+        <h4>Desagregación Prefill/Decode</h4>
+        <p>Nodos especializados para cada fase. Permite escalar independientemente y eliminar
+        el compromiso latencia/throughput que impone la arquitectura monolítica.</p>
+        <div class="maturity">Investigación → Mooncake, Distserve</div>
+      </div>
+      <div class="future-card">
+        <span class="fc-icon">🌐</span>
+        <h4>Serving distribuido multi-GPU</h4>
+        <p>Pipeline parallelism y tensor parallelism permiten distribuir modelos de cientos de miles
+        de millones de parámetros entre múltiples GPUs con latencia controlada.</p>
+        <div class="maturity">Producción → Megatron-LM, vLLM TP</div>
+      </div>
+      <div class="future-card">
+        <span class="fc-icon">📱</span>
+        <h4>Inferencia en dispositivo</h4>
+        <p>Cuantización 2-bit, destilación extrema y hardware NPU dedicado abren la puerta a
+        modelos de 7–14 B parámetros en smartphones de gama alta con latencia aceptable.</p>
+        <div class="maturity">Producción → GGUF, Apple MLX</div>
+      </div>
+    </div>
+ 
+    <!-- ── Reflexión final ── -->
+    <h3>Reflexión de cierre: el software como multiplicador del hardware</h3>
+    <p>
+      Una conclusión transversal que emerge del análisis es que <strong>la optimización algorítmica supera
+      consistentemente a la escala de hardware</strong> como palanca de mejora en sistemas de inferencia.
+      Pasar de batching estático a continuous batching con PagedAttention multiplica el throughput por 3×
+      sin añadir ni un solo acelerador. Añadir cuantización INT4 alcanza 5× de mejora total.
+      Comprar una GPU un 50 % más cara, sin cambiar el software, produciría en el mejor caso un 50 %
+      de mejora en throughput —y con frecuencia mucho menos, si el sistema no estaba limitado por cómputo
+      sino por ancho de banda de memoria o fragmentación del KV cache.
+    </p>
+    <p>
+      Esta asimetría tiene implicaciones directas para cualquier equipo que opere modelos en producción:
+      la inversión en ingeniería de sistemas de serving —en el diseño cuidadoso de schedulers, en la
+      elección del motor correcto, en la calibración de la cuantización para cada tarea— retorna
+      sistemáticamente más valor que la inversión equivalente en hardware adicional, al menos hasta
+      que todas las optimizaciones algorítmicas disponibles hayan sido aplicadas.
+    </p>
+ 
+    <!-- ── Vídeo Karpathy ── -->
+    <h3>Recurso adicional: Andrej Karpathy sobre el estado de los LLMs en inferencia</h3>
+    <p>
+      Este vídeo de Andrej Karpathy (ex-OpenAI, Tesla, fundador de Eureka Labs) ofrece una visión de alto
+      nivel sobre los retos de eficiencia en LLMs, ideal como recurso de cierre para el seminario. Cubre
+      de forma intuitiva por qué la inferencia —y no el entrenamiento— se ha convertido en el cuello de
+      botella dominante de la IA moderna, y por qué las técnicas de serving analizadas en este documento
+      son críticas para cualquier despliegue a escala.
+    </p>
+    <div class="video-wrap video-fallback">
+      <a href="https://www.youtube.com/watch?v=zjkBMFhNj_g" target="_blank">
+        <img
+          src="https://img.youtube.com/vi/zjkBMFhNj_g/maxresdefault.jpg"
+          alt="Andrej Karpathy: Intro to Large Language Models">
+        <span class="play-btn">▶</span>
+      </a>
+    </div>
+    <p class="video-caption">Andrej Karpathy (2023). «Intro to Large Language Models». Charla pública. ~60 min. La sección sobre inferencia y coste comienza aproximadamente en el minuto 30.</p>
+ 
+  </section>
+
+
+
+
 
     <section>
       <h2>Bibliografía</h2>
@@ -841,8 +1804,44 @@
         <li>Kwon, W., et al. (2023). <em>Efficient Memory Management for Large Language Model Serving with PagedAttention</em>. SOSP 2023.</li>
         <li>Yu, G., et al. (2022). <em>Orca: A Distributed Serving System for Transformer-Based Generative Models</em>. OSDI 2022.</li>
         <li>Zheng, L., et al. (2024). <em>SGLang: Efficient Execution of Structured Language Model Programs</em>.</li>
+        <li>Lin, J., et al. (2023). <em>AWQ: Activation-aware Weight Quantization for LLM Compression and Acceleration</em>.</li>
+        <li>NVIDIA (2024). <em>TensorRT-LLM: Open-source Library to Accelerate LLM Inference</em>.</li>
       </ol>
     </section>
   </main>
+
+<script>
+  /* ── Animación de barras al cargar ── */
+  function animateBars() {
+    document.querySelectorAll('.bar-fill[data-pct]').forEach(bar => {
+      const pct = bar.dataset.pct;
+      setTimeout(() => { bar.style.width = pct + '%'; }, 300);
+    });
+    document.querySelectorAll('.compare-bar[data-pct]').forEach(bar => {
+      const pct = bar.dataset.pct;
+      setTimeout(() => { bar.style.width = pct + '%'; }, 400);
+    });
+  }
+  if ('IntersectionObserver' in window) {
+    const firstBar = document.querySelector('.bar-fill[data-pct]');
+    if (firstBar) {
+      const obs = new IntersectionObserver(entries => {
+        entries.forEach(e => { if (e.isIntersecting) { animateBars(); obs.disconnect(); } });
+      }, { threshold: 0.2 });
+      obs.observe(firstBar);
+    }
+  } else {
+    animateBars();
+  }
+ 
+  /* ── Tabs del trilema ── */
+  function switchTab(id, event) {
+    document.querySelectorAll('.tab-content').forEach(el => el.classList.remove('active'));
+    document.querySelectorAll('.tab-btn').forEach(el => el.classList.remove('active'));
+    document.getElementById('tab-' + id).classList.add('active');
+    if (event && event.currentTarget) event.currentTarget.classList.add('active');
+  }
+</script>
+
 </body>
 </html>
