@@ -1134,6 +1134,7 @@
             Existen varios métodos para aplicar cuantización a un modelo, con el objetivo de acelerar el cálculo,
             reducir el tamaño del modelo y minimizar la pérdida de precisión.
         </p>
+        <p>Según cuándo cuantizamos:</p>
         <ul>
             <li><strong>Post-Training Quantization:</strong> consiste en aplicar la cuantización una vez que el modelo
                 ya ha sido entrenado.
@@ -1152,6 +1153,9 @@
                 por la baja precisión durante el proceso de <em>backpropagation</em>. Como resultado, esta técnica suele
                 conservar mejor la precisión final del modelo que la cuantización post-entrenamiento.
             </li>
+          </ul>
+          <p>Según qué componentes cuantizamos:</p>
+          <ul>
             <li><strong>Weight Quantization:</strong> consiste en cuantizar únicamente las matrices de pesos del modelo,
                 manteniendo las activaciones en su precisión original. Esta estrategia permite reducir
                 significativamente los requisitos de almacenamiento, aunque el ahorro computacional puede ser menor que
@@ -1168,6 +1172,16 @@
                 (LLMs). Los pesos considerados más importantes se representan con mayor número de bits, mientras que los
                 menos relevantes se cuantizan con menor precisión. Este enfoque da lugar a una cuantización de precisión
                 mixta, capaz de mejorar la eficiencia manteniendo un buen nivel de exactitud.
+            </li>
+            <li><strong>Activation Quantization:</strong> se cuantizan las activaciones intermedias del modelo, lo que puede
+              mejorar aún más la velocidad de inferencia mediante el uso de hardware especializado para el procesamiento
+              de tensores que escala el rendimiento con un ancho de bits reducido. Sin embargo, esta técnica es más
+              compleja de implementar y calibrar, ya que las activaciones son dinámicas y varían según la entrada y el
+              estado del modelo.
+            </li>
+            <li><strong>KV-Cache Quantization:</strong> se cuantizan los valores almacenados en la memoria intermedia de claves y valores usada durante la inferencia 
+              autoregresiva. Es especialmente importante cuando el contexto es largo, porque la KV cache crece con la longitud 
+              de secuencia y puede convertirse en un cuello de botella de memoria y throughput.
             </li>
         </ul>
 
