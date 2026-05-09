@@ -802,9 +802,7 @@
                 </div>
             </div>
         </div>
-        <div class="media-slot">Espacio para insertar aquí una imagen o gráfico sobre crecimiento del coste de
-            inferencia en LLMs.
-        </div>
+
     </section>
 
     <section>
@@ -1312,7 +1310,7 @@
             redundancia mediante la persistencia de dos de los vectores empleados para la inferencia en cada token. Para ello, de cada token se extraen tres vectores: <em>Query</em> (Q), <em>Key</em> (K) y <em>Value</em> (V).
             Mientras que el vector Query del token actual debe compararse con todo el pasado para determinar la
             relevancia y, por lo tanto, debe recalcularse en cada iteración, los vectores Key y Value de los tokens
-            previos son estático; no cambian a medida que la secuencia crece. La KV Cache almacena estos tensores en la
+            previos son estáticos; no cambian a medida que la secuencia crece. La KV Cache almacena estos tensores en la
             memoria de la GPU (VRAM), permitiendo que el modelo solo compute Q para el nuevo token, aprovechando los
             otros vectores del historial almacenado.
         </p>
@@ -1485,10 +1483,6 @@
             </tr>
             </tbody>
         </table>
-
-        <div class="media-slot">Espacio para insertar aquí un gráfico comparativo de throughput entre static batching,
-            continuous batching y PagedAttention en un escenario de serving real.
-        </div>
     </section>
 
     
